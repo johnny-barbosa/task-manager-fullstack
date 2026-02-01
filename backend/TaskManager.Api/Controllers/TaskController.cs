@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TaskManager.Api.Models;
+using TaskManager.Api.Services;
 
 namespace TaskManager.Api.Controllers
 {
@@ -11,27 +11,17 @@ namespace TaskManager.Api.Controllers
     [Route("api/tasks")]
     public class TasksController : ControllerBase
     {
+        private readonly ITaskService _taskService;
+
+        public TasksController(ITaskService taskService)
+        {
+            _taskService = taskService;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
-            var tasks = new List<TaskItem>
-            {
-                new TaskItem
-                {
-                    Id = 1,
-                    Title = "Estudar ASP.NET Core",
-                    IsCompleted = false,
-                    CreatedAt = DateTime.Now
-                },
-                new TaskItem
-                {
-                    Id = 2,
-                    Title = "Criar projeto Angular",
-                    IsCompleted = false,
-                    CreatedAt = DateTime.Now
-                }
-            };
-
+            var tasks = _taskService.GetAll();
             return Ok(tasks);
         }
     }
